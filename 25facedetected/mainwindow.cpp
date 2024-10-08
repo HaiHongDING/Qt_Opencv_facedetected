@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->pushButton->setEnabled(false);
 
 }
 
@@ -43,6 +44,10 @@ void MainWindow::on_pushButton_2_clicked()
             CamraMap.insert(std::make_pair(cameras.at(i).description().toStdString(), i));
             // 这里可以添加其他信息，例如摄像头的描述等
         }
-
+        auto cap=CamraMap.find(ui->comboBox->currentText().toStdString());
+        if(cap!=CamraMap.end())
+        {
+            ui->pushButton->setEnabled(true);
+        }
 }
 

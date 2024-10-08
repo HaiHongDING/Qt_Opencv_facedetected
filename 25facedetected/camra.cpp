@@ -24,10 +24,8 @@ camra::camra(int index,QWidget *parent) :
     cap.open(index);
     cap.set(cv::CAP_PROP_FRAME_WIDTH,1280);
     cap.set(cv::CAP_PROP_FRAME_HEIGHT,720);
-
     timer = new QTimer(this);
     //double  // 设置目标帧率
-
     fps = 30;
     bool ret=cap.set(CAP_PROP_FPS, fps);
     if(!ret)
@@ -47,7 +45,8 @@ void camra::onTimeout()
     cap>>frame;
 
     #if 1
-    std::string fd_model_path = "D:/Qt_Opencv_facedetected/lib/face_detection_yunet_2022mar.onnx";
+    //std::string fd_model_path = "D:/Qt_Opencv_facedetected/lib/face_detection_yunet_2022mar.onnx";
+    std::string fd_model_path = "../lib/face_detection_yunet_2022mar.onnx";//相对于cpp的位置
     // 创建人脸检测对象
     auto faceDetector = cv::FaceDetectorYN::create(fd_model_path, "", cv::Size(frame.cols, frame.rows));
     DebugLog;
