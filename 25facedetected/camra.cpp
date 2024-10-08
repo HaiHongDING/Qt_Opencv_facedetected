@@ -14,30 +14,31 @@ using namespace std;
 #define DebugLog //nothing
 #endif
 using namespace cv;
-camra::camra(QWidget *parent) :
+camra::camra(int index,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::camra)
 {
     ui->setupUi(this);
     setWindowTitle("Display Image");
     resize(1280, 780); // 设置窗口大小
-    cap.open(0);
+    cap.open(index);
     cap.set(cv::CAP_PROP_FRAME_WIDTH,1280);
     cap.set(cv::CAP_PROP_FRAME_HEIGHT,720);
 
     timer = new QTimer(this);
     //double  // 设置目标帧率
-    double fps = cap.get(CAP_PROP_FPS);
-        if (fps <= 0) {
-            cerr << "Warning: Unable to get FPS. The camera might not report it." << endl;
-        } else {
-            cout << "Camera FPS: " << fps << endl;
-        }
-        fps = 50;
+
+    fps = 30;
     bool ret=cap.set(CAP_PROP_FPS, fps);
     if(!ret)
     {
         cerr<<"SET fps ERROR"<<endl;
+    }
+    fps = cap.get(CAP_PROP_FPS);
+    if (fps <= 0) {
+        cerr << "Warning: Unable to get FPS. The camera might not report it." << endl;
+    } else {
+        cout << "Camera FPS: " << fps << endl;
     }
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
 }
@@ -45,28 +46,8 @@ void camra::onTimeout()
 {
     cap>>frame;
 
-    // 进行人脸检测
-    // 人脸检测模型路径
-    // 检查图像的通道数
-
-//    // 检查图像的数据类型
-//    int depth = frame.depth();
-//    cout << "Image depth: " << depth << endl; // CV_8U = 0
-
-//    // 如果需要，调整图像的通道数和数据类型
-//    Mat image_converted;
-//    if (channels == 3) {
-//        // 如果是彩色图像，转换为灰度图像
-//        cvtColor(frame, frame  , COLOR_BGR2GRAY);
-//    } else if (channels == 1) {
-//        // 如果是灰度图像，直接使用
-//        image_converted = frame;
-//    } else {
-//        cerr << "Error: Unsupported image channels" << endl;
-//        return ;
-//    }
     #if 1
-    std::string fd_model_path = "D:/opencv455-win32/face_detection_yunet_2022mar.onnx";
+    std::string fd_model_path = "D:/Qt_Opencv_facedetected/lib/face_detection_yunet_2022mar.onnx";
     // 创建人脸检测对象
     auto faceDetector = cv::FaceDetectorYN::create(fd_model_path, "", cv::Size(frame.cols, frame.rows));
     DebugLog;
@@ -77,7 +58,7 @@ void camra::onTimeout()
     faceDetector->detect(frame, faces);
 DebugLog;
 // 打印输出人脸位置信息
-    cout << "faces: " << faces << endl;
+    //cout << "faces: " << faces << endl;
 #if 1
     if(!faces.empty())
     {
@@ -109,7 +90,7 @@ DebugLog;
 }
 void camra::timerStart()
 {
-    timer->start(1000/50);
+    timer->start(1000/fps);
 }
 camra::~camra()
 {

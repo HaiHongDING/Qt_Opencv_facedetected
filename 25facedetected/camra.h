@@ -14,7 +14,7 @@ class camra : public QWidget
     Q_OBJECT
 
 public:
-    explicit camra(QWidget *parent = nullptr);
+    explicit camra(int index=0,QWidget *parent = nullptr);
     void timerStart();
     ~camra();
 private slots:
@@ -24,7 +24,8 @@ private:
     cv::VideoCapture cap;
     QTimer* timer;
     cv::Mat frame;
-
+    double fps;
+    int index;
 };
 
 #endif // CAMRA_H
