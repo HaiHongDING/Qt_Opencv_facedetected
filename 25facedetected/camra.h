@@ -7,6 +7,7 @@
 #include <iostream>
 namespace Ui {
 class camra;
+
 }
 
 class camra : public QWidget
@@ -16,6 +17,7 @@ class camra : public QWidget
 public:
     explicit camra(int index=0,QWidget *parent = nullptr);
     void timerStart();
+    QImage MatImageToQt(const cv::Mat &src);
     ~camra();
 private slots:
     void onTimeout();
@@ -26,6 +28,7 @@ private:
     cv::Mat frame;
     double fps;
     int index;
+    cv::Ptr<cv::FaceDetectorYN> faceDetector;
 };
 
 #endif // CAMRA_H

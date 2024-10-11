@@ -19,7 +19,7 @@ CXXFLAGS      = -fno-keep-inline-dllexport -g -std=gnu++11 -Wall -Wextra -Wextra
 INCPATH       = -I..\25facedetected -I. -I..\include -IC:\Qt\5.15.2\mingw81_32\include -IC:\Qt\5.15.2\mingw81_32\include\QtMultimediaWidgets -IC:\Qt\5.15.2\mingw81_32\include\QtMultimedia -IC:\Qt\5.15.2\mingw81_32\include\QtWidgets -IC:\Qt\5.15.2\mingw81_32\include\QtGui -IC:\Qt\5.15.2\mingw81_32\include\QtANGLE -IC:\Qt\5.15.2\mingw81_32\include\QtNetwork -IC:\Qt\5.15.2\mingw81_32\include\QtSql -IC:\Qt\5.15.2\mingw81_32\include\QtCore -Idebug -I. -IC:\Qt\5.15.2\mingw81_32\mkspecs\win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-subsystem,windows -mthreads
-LIBS        =        -LD:\Qt_Opencv_facedetected\lib\opencvLib -lopencv_core455 -lopencv_imgcodecs455 -lopencv_objdetect455 -lopencv_imgproc455 -lopencv_videoio455 -lopencv_highgui455 C:\Qt\5.15.2\mingw81_32\lib\libQt5MultimediaWidgets.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Multimedia.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Widgets.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Gui.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Network.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Sql.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Core.a  -lmingw32 C:\Qt\5.15.2\mingw81_32\lib\libqtmain.a -LC:\openssl\lib -LC:\Utils\my_sql\mysql-5.7.25-win32\lib -LC:\Utils\postgresql\pgsql\lib -lshell32 
+LIBS        =        -LD:\qt_project\2face\Qt_Opencv_facedetected\lib\opencvLib -lopencv_core455 -lopencv_imgcodecs455 -lopencv_objdetect455 -lopencv_imgproc455 -lopencv_videoio455 -lopencv_highgui455 C:\Qt\5.15.2\mingw81_32\lib\libQt5MultimediaWidgets.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Multimedia.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Widgets.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Gui.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Network.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Sql.a C:\Qt\5.15.2\mingw81_32\lib\libQt5Core.a  -lmingw32 C:\Qt\5.15.2\mingw81_32\lib\libqtmain.a -LC:\openssl\lib -LC:\Utils\my_sql\mysql-5.7.25-win32\lib -LC:\Utils\postgresql\pgsql\lib -lshell32 
 QMAKE         = C:\Qt\5.15.2\mingw81_32\bin\qmake.exe
 DEL_FILE      = del
 CHK_DIR_EXISTS= if not exist
@@ -326,7 +326,7 @@ debug/moc_camra.cpp: ../25facedetected/camra.h \
 		C:/Qt/5.15.2/mingw81_32/include/QtCore/qbasictimer.h \
 		debug/moc_predefs.h \
 		C:/Qt/5.15.2/mingw81_32/bin/moc.exe
-	C:\Qt\5.15.2\mingw81_32\bin\moc.exe $(DEFINES) --include D:/Qt_Opencv_facedetected/build-25facedetected-Desktop_Qt_5_15_2_MinGW_32_bit-Debug/debug/moc_predefs.h -IC:/Qt/5.15.2/mingw81_32/mkspecs/win32-g++ -ID:/Qt_Opencv_facedetected/25facedetected -ID:/Qt_Opencv_facedetected/include -IC:/Qt/5.15.2/mingw81_32/include -IC:/Qt/5.15.2/mingw81_32/include/QtMultimediaWidgets -IC:/Qt/5.15.2/mingw81_32/include/QtMultimedia -IC:/Qt/5.15.2/mingw81_32/include/QtWidgets -IC:/Qt/5.15.2/mingw81_32/include/QtGui -IC:/Qt/5.15.2/mingw81_32/include/QtANGLE -IC:/Qt/5.15.2/mingw81_32/include/QtNetwork -IC:/Qt/5.15.2/mingw81_32/include/QtSql -IC:/Qt/5.15.2/mingw81_32/include/QtCore -I. -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++ -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32 -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include-fixed -IC:/Qt/Tools/mingw810_32/i686-w64-mingw32/include ..\25facedetected\camra.h -o debug\moc_camra.cpp
+	C:\Qt\5.15.2\mingw81_32\bin\moc.exe $(DEFINES) --include D:/qt_project/2face/Qt_Opencv_facedetected/build-25facedetected-Desktop_Qt_5_15_2_MinGW_32_bit-Debug/debug/moc_predefs.h -IC:/Qt/5.15.2/mingw81_32/mkspecs/win32-g++ -ID:/qt_project/2face/Qt_Opencv_facedetected/25facedetected -ID:/qt_project/2face/Qt_Opencv_facedetected/include -IC:/Qt/5.15.2/mingw81_32/include -IC:/Qt/5.15.2/mingw81_32/include/QtMultimediaWidgets -IC:/Qt/5.15.2/mingw81_32/include/QtMultimedia -IC:/Qt/5.15.2/mingw81_32/include/QtWidgets -IC:/Qt/5.15.2/mingw81_32/include/QtGui -IC:/Qt/5.15.2/mingw81_32/include/QtANGLE -IC:/Qt/5.15.2/mingw81_32/include/QtNetwork -IC:/Qt/5.15.2/mingw81_32/include/QtSql -IC:/Qt/5.15.2/mingw81_32/include/QtCore -I. -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++ -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32 -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include-fixed -IC:/Qt/Tools/mingw810_32/i686-w64-mingw32/include ..\25facedetected\camra.h -o debug\moc_camra.cpp
 
 debug/moc_mainwindow.cpp: ../25facedetected/mainwindow.h \
 		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/QMainWindow \
@@ -564,7 +564,7 @@ debug/moc_mainwindow.cpp: ../25facedetected/mainwindow.h \
 		C:/Qt/5.15.2/mingw81_32/include/QtCore/QDebug \
 		debug/moc_predefs.h \
 		C:/Qt/5.15.2/mingw81_32/bin/moc.exe
-	C:\Qt\5.15.2\mingw81_32\bin\moc.exe $(DEFINES) --include D:/Qt_Opencv_facedetected/build-25facedetected-Desktop_Qt_5_15_2_MinGW_32_bit-Debug/debug/moc_predefs.h -IC:/Qt/5.15.2/mingw81_32/mkspecs/win32-g++ -ID:/Qt_Opencv_facedetected/25facedetected -ID:/Qt_Opencv_facedetected/include -IC:/Qt/5.15.2/mingw81_32/include -IC:/Qt/5.15.2/mingw81_32/include/QtMultimediaWidgets -IC:/Qt/5.15.2/mingw81_32/include/QtMultimedia -IC:/Qt/5.15.2/mingw81_32/include/QtWidgets -IC:/Qt/5.15.2/mingw81_32/include/QtGui -IC:/Qt/5.15.2/mingw81_32/include/QtANGLE -IC:/Qt/5.15.2/mingw81_32/include/QtNetwork -IC:/Qt/5.15.2/mingw81_32/include/QtSql -IC:/Qt/5.15.2/mingw81_32/include/QtCore -I. -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++ -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32 -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include-fixed -IC:/Qt/Tools/mingw810_32/i686-w64-mingw32/include ..\25facedetected\mainwindow.h -o debug\moc_mainwindow.cpp
+	C:\Qt\5.15.2\mingw81_32\bin\moc.exe $(DEFINES) --include D:/qt_project/2face/Qt_Opencv_facedetected/build-25facedetected-Desktop_Qt_5_15_2_MinGW_32_bit-Debug/debug/moc_predefs.h -IC:/Qt/5.15.2/mingw81_32/mkspecs/win32-g++ -ID:/qt_project/2face/Qt_Opencv_facedetected/25facedetected -ID:/qt_project/2face/Qt_Opencv_facedetected/include -IC:/Qt/5.15.2/mingw81_32/include -IC:/Qt/5.15.2/mingw81_32/include/QtMultimediaWidgets -IC:/Qt/5.15.2/mingw81_32/include/QtMultimedia -IC:/Qt/5.15.2/mingw81_32/include/QtWidgets -IC:/Qt/5.15.2/mingw81_32/include/QtGui -IC:/Qt/5.15.2/mingw81_32/include/QtANGLE -IC:/Qt/5.15.2/mingw81_32/include/QtNetwork -IC:/Qt/5.15.2/mingw81_32/include/QtSql -IC:/Qt/5.15.2/mingw81_32/include/QtCore -I. -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++ -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32 -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include -IC:/Qt/Tools/mingw810_32/lib/gcc/i686-w64-mingw32/8.1.0/include-fixed -IC:/Qt/Tools/mingw810_32/i686-w64-mingw32/include ..\25facedetected\mainwindow.h -o debug\moc_mainwindow.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1311,6 +1311,20 @@ debug/mainwindow.o: ../25facedetected/mainwindow.cpp ../25facedetected/mainwindo
 		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qdesktopwidget.h \
 		C:/Qt/5.15.2/mingw81_32/include/QtGui/qguiapplication.h \
 		C:/Qt/5.15.2/mingw81_32/include/QtGui/qinputmethod.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/QComboBox \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qcombobox.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qabstractitemdelegate.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qstyleoption.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qabstractspinbox.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtGui/qvalidator.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtCore/qregularexpression.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qslider.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qabstractslider.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qstyle.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qtabbar.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qrubberband.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qframe.h \
+		C:/Qt/5.15.2/mingw81_32/include/QtCore/qabstractitemmodel.h \
 		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/QMenuBar \
 		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qmenubar.h \
 		C:/Qt/5.15.2/mingw81_32/include/QtWidgets/qmenu.h \

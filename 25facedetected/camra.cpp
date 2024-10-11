@@ -19,36 +19,71 @@ camra::camra(int index,QWidget *parent) :
     ui(new Ui::camra)
 {
     ui->setupUi(this);
+
+    fps = 30;
     setWindowTitle("Display Image");
     resize(1280, 780); // 设置窗口大小
     cap.open(index);
+    //cap.set(CAP_PROP_FPS, fps);
+    cap.set(CAP_PROP_FOURCC,VideoWriter::fourcc('M', 'J', 'P', 'G'));
     cap.set(cv::CAP_PROP_FRAME_WIDTH,1280);
     cap.set(cv::CAP_PROP_FRAME_HEIGHT,720);
     timer = new QTimer(this);
     //double  // 设置目标帧率
-    fps = 30;
-    bool ret=cap.set(CAP_PROP_FPS, fps);
-    if(!ret)
-    {
-        cerr<<"SET fps ERROR"<<endl;
-    }
-    fps = cap.get(CAP_PROP_FPS);
-    if (fps <= 0) {
-        cerr << "Warning: Unable to get FPS. The camera might not report it." << endl;
-    } else {
-        cout << "Camera FPS: " << fps << endl;
-    }
+    cap>>frame;
+    //std::string fd_model_path = "D:/Qt_Opencv_facedetected/lib/face_detection_yunet_2022mar.onnx";
+    std::string fd_model_path = "../lib/face_detection_yunet_2022mar.onnx";//相对于cpp的位置
+    // 创建人脸检测对象
+    faceDetector = cv::FaceDetectorYN::create(fd_model_path, "", cv::Size(frame.cols, frame.rows));
+
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+}
+QImage camra::MatImageToQt(const Mat &src)
+{
+    if(src.type() == CV_8UC1)
+    {
+        cout<<"src.type() == CV_8UC1"<<endl;
+        QImage qImage(src.cols,src.rows,QImage::Format_Indexed8);
+        qImage.setColorCount(256);
+        for(int i = 0; i < 256; i ++)
+        {
+            qImage.setColor(i,qRgb(i,i,i));
+        }
+        uchar *pSrc = src.data;
+        for(int row = 0; row < src.rows; row ++)
+        {
+            uchar *pDest = qImage.scanLine(row);
+            memcmp(pDest,pSrc,src.cols);
+            pSrc += src.step;
+        }
+        return qImage;
+    }
+    else if(src.type() == CV_8UC3)
+    {
+        const uchar *pSrc = (const uchar*)src.data;
+        QImage qImage(pSrc,src.cols,src.rows,src.step,QImage::Format_RGB888);
+        cout<<"src.type() == CV_8UC3"<<endl;
+        return qImage.rgbSwapped();
+    }
+    else if(src.type() == CV_8UC4)
+    {
+        cout<<"src.type() == CV_8UC4"<<endl;
+        const uchar *pSrc = (const uchar*)src.data;
+        QImage qImage(pSrc, src.cols, src.rows, src.step, QImage::Format_ARGB32);
+        return qImage.copy();
+    }
+    else
+    {
+        cout<<"src.type() == else"<<endl;
+        return QImage();
+    }
 }
 void camra::onTimeout()
 {
     cap>>frame;
 
-    #if 1
-    //std::string fd_model_path = "D:/Qt_Opencv_facedetected/lib/face_detection_yunet_2022mar.onnx";
-    std::string fd_model_path = "../lib/face_detection_yunet_2022mar.onnx";//相对于cpp的位置
-    // 创建人脸检测对象
-    auto faceDetector = cv::FaceDetectorYN::create(fd_model_path, "", cv::Size(frame.cols, frame.rows));
+    #if 0
+
     DebugLog;
     // 构造一个Mat对象，用来保存检测到的人脸位置信息
     cv::Mat faces;
@@ -61,10 +96,10 @@ DebugLog;
 #if 1
     if(!faces.empty())
     {
-        cout << "faces: " << faces << endl;
+        //cout << "faces: " << faces << endl;
         // 使用矩形框标记人脸
         int x = faces.at<float>(0);
-        cout << faces.type() << endl; // CV_32F
+        //cout << faces.type() << endl; // CV_32F
         int y = faces.at<float>(1);
         int w = faces.at<float>(2);
         int h = faces.at<float>(3);
@@ -79,9 +114,8 @@ DebugLog;
     DebugLog;
 
     #endif
-    QImage qframe((const unsigned char*)frame.data,frame.cols,frame.rows,frame.step,QImage::Format_RGB888);
+    QImage qframe=MatImageToQt(frame);
     DebugLog;
-    qframe=qframe.rgbSwapped();
     ui->label->setScaledContents(true);
     DebugLog;
     ui->label->setPixmap(QPixmap::fromImage(qframe));
