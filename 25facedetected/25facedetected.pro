@@ -29,6 +29,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 
 INCLUDEPATH +=$$PWD/../include
-LIBS += -L$$PWD/../lib/opencvLib/ -lopencv_core455  -lopencv_imgcodecs455 -lopencv_objdetect455 \
+LIBS += -L$$PWD/../lib/opencvLib/  -lopencv_core455  -lopencv_imgcodecs455 -lopencv_objdetect455 \
 -lopencv_imgproc455 -lopencv_videoio455 -lopencv_highgui455
 

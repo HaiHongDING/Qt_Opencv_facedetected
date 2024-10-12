@@ -13,6 +13,7 @@ using namespace std;
 #else
 #define DebugLog //nothing
 #endif
+
 using namespace cv;
 camra::camra(int index,QWidget *parent) :
     QWidget(parent),
@@ -24,21 +25,28 @@ camra::camra(int index,QWidget *parent) :
     setWindowTitle("Display Image");
     resize(1280, 780); // 设置窗口大小
     cap.open(index);
-    //cap.set(CAP_PROP_FPS, fps);
+    cap.set(CAP_PROP_FPS, fps);
     cap.set(CAP_PROP_FOURCC,VideoWriter::fourcc('M', 'J', 'P', 'G'));
     cap.set(cv::CAP_PROP_FRAME_WIDTH,1280);
     cap.set(cv::CAP_PROP_FRAME_HEIGHT,720);
     timer = new QTimer(this);
-    //double  // 设置目标帧率
-    cap>>frame;
-    //std::string fd_model_path = "D:/Qt_Opencv_facedetected/lib/face_detection_yunet_2022mar.onnx";
-    std::string fd_model_path = "../lib/face_detection_yunet_2022mar.onnx";//相对于cpp的位置
-    // 创建人脸检测对象
-    faceDetector = cv::FaceDetectorYN::create(fd_model_path, "", cv::Size(frame.cols, frame.rows));
-
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+#ifdef OPEN_DETECTED
+    ThreadNumber=2;
+    timer2 = new QTimer(this);
+    //connect(this, &camra::framesReady, this, &camra::onTimeout2);
+    connect(&GlobalSignalManager::instance(), &GlobalSignalManager::framesReady, this, &camra::onTimeout2);
+    //connect(timer2, SIGNAL(timeout()), this, SLOT(onTimeout2()));
+    cap>>frame;
+    frameSize=cv::Size(frame.cols, frame.rows);
+    //myThread =new  MyThread[ThreadNumber](ImageQueue,FrameQueue,frameSize);
+    MyThread1=new MyThread(ImageQueue,FrameQueue,frameSize);
+    MyThread2=new MyThread(ImageQueue,FrameQueue,frameSize);
+    MyThread3=new MyThread(ImageQueue,FrameQueue,frameSize);
+#endif
+    this->timerStart();
 }
-QImage camra::MatImageToQt(const Mat &src)
+QImage MatImageToQt(const Mat &src)//判断Mat对象的类型并进行相应的转化
 {
     if(src.type() == CV_8UC1)
     {
@@ -48,13 +56,6 @@ QImage camra::MatImageToQt(const Mat &src)
         for(int i = 0; i < 256; i ++)
         {
             qImage.setColor(i,qRgb(i,i,i));
-        }
-        uchar *pSrc = src.data;
-        for(int row = 0; row < src.rows; row ++)
-        {
-            uchar *pDest = qImage.scanLine(row);
-            memcmp(pDest,pSrc,src.cols);
-            pSrc += src.step;
         }
         return qImage;
     }
@@ -78,57 +79,136 @@ QImage camra::MatImageToQt(const Mat &src)
         return QImage();
     }
 }
-void camra::onTimeout()
+#ifdef OPEN_DETECTED
+void camra::onTimeout2()//每一帧从QPixmap队列里拿出一个QPixmap对象显示在label上
 {
-    cap>>frame;
-
-    #if 0
-
-    DebugLog;
-    // 构造一个Mat对象，用来保存检测到的人脸位置信息
-    cv::Mat faces;
-    DebugLog;
-    // 进行检测，检测的结果保存于faces中
-    faceDetector->detect(frame, faces);
-DebugLog;
-// 打印输出人脸位置信息
-    //cout << "faces: " << faces << endl;
-#if 1
-    if(!faces.empty())
+    QPixmap qimage=ImageQueue.dequeue();
+    if(!qimage.isNull())
     {
-        //cout << "faces: " << faces << endl;
-        // 使用矩形框标记人脸
-        int x = faces.at<float>(0);
-        //cout << faces.type() << endl; // CV_32F
-        int y = faces.at<float>(1);
-        int w = faces.at<float>(2);
-        int h = faces.at<float>(3);
-        DebugLog;
-        cv::rectangle(frame, cv::Rect(x,y,w,h), cv::Scalar(0,255,255));
+       ui->label->setPixmap(qimage);
     }
-#endif
-//    for (size_t i = 0; i < faces.size(); i++)
-//    {
-//        rectangle(frame, faces[i], Scalar(255, 0, 0), 2); // 绘制矩形框
-//    }
-    DebugLog;
-
-    #endif
-    QImage qframe=MatImageToQt(frame);
-    DebugLog;
-    ui->label->setScaledContents(true);
-    DebugLog;
-    ui->label->setPixmap(QPixmap::fromImage(qframe));
-    DebugLog;
 }
+void MyThread:: run()//线程处理：将Mat队列中的原始图像拿出一个对象并转化成QPixmap对象入队QPixmap队列
+{
+    while(!stopFlag)
+    {
+
+        QMutexLocker locker(&mutex);
+        cv::Mat faces;
+        cv::Mat frame=FrameQueue.dequeue();
+        locker.unlock();
+
+        if(!frame.empty())
+        {
+            int x,y,w,h;
+            faceDetector->detect(frame, faces);
+            if(!faces.empty())
+            {
+                cout<<"faces.size():"<<faces.size()<<endl;
+                x = faces.at<float>(0);
+                y = faces.at<float>(1);
+                w = faces.at<float>(2);
+                h = faces.at<float>(3);
+                //cv::rectangle(frame, cv::Rect(x,y,w,h), cv::Scalar(0,255,255));
+               int lefteye_x=faces.at<float>(4);
+               int lefteye_y=faces.at<float>(5);
+               int righteye_x=faces.at<float>(6);
+               int righteye_y=faces.at<float>(7);
+               int nose_x=faces.at<float>(8);
+               int nose_y=faces.at<float>(9);
+               int leftLip_x=faces.at<float>(10);
+               int leftLip_y=faces.at<float>(11);
+               int rightLip_x=faces.at<float>(12);
+               int rightLip_y=faces.at<float>(13);
+
+               cv::rectangle(frame, cv::Rect(x,y,w,h), cv::Scalar(0,255,255));//脸所在矩形
+               cv::circle(frame,cv::Point(lefteye_x,lefteye_y),5,cv::Scalar(0,255,255));//左眼圆
+               cv::circle(frame,cv::Point(righteye_x,righteye_y),5,cv::Scalar(0,255,255));//右眼圆
+               cv::circle(frame,cv::Point(nose_x,nose_y),5,cv::Scalar(0,255,255));//鼻子圆
+               cv::circle(frame,cv::Point(leftLip_x,leftLip_y),5,cv::Scalar(0,255,255));//左嘴唇圆
+               cv::circle(frame,cv::Point(rightLip_x,rightLip_y),5,cv::Scalar(0,255,255));//右嘴唇圆
+               cv::line(frame,cv::Point(lefteye_x,lefteye_y),cv::Point(righteye_x,righteye_y),cv::Scalar(0,255,255));//左眼连右眼直线
+               cv::line(frame,cv::Point(lefteye_x,lefteye_y),cv::Point(nose_x,nose_y),cv::Scalar(0,255,255));//左眼连鼻子直线
+               cv::line(frame,cv::Point(righteye_x,righteye_y),cv::Point(nose_x,nose_y),cv::Scalar(0,255,255));//右眼连鼻子直线
+               cv::line(frame,cv::Point(leftLip_x,leftLip_y),cv::Point(nose_x,nose_y),cv::Scalar(0,255,255));//左嘴唇连鼻子直线
+               cv::line(frame,cv::Point(rightLip_x,rightLip_y),cv::Point(nose_x,nose_y),cv::Scalar(0,255,255));//右嘴唇连鼻子直线
+
+
+            }
+            locker.relock();
+            QImage qImage=MatImageToQt(frame);
+            if(!faces.empty())
+            {
+                QPainter painter(&qImage);
+                QFont font("SimSun", 20); // 使用宋体或其他支持汉字的字体
+                painter.setFont(font);
+                painter.setPen(QColor(Qt::yellow));
+                painter.drawText(x+w/2, y, QString::fromStdString("脸"));
+            }
+            ImageQueue.enqueue(QPixmap::fromImage(qImage));
+            emit GlobalSignalManager::instance().framesReady();
+            locker.unlock();
+        }
+
+    }
+}
+#endif
+void camra::onTimeout()//每一帧摄像头采集一次图像放入Mat队列中
+{
+
+    cv::Mat frame;
+    cap>>frame;
+#ifdef OPEN_DETECTED
+    FrameQueue.enqueue(frame);
+#else
+    ui->label->setPixmap(QPixmap::fromImage(MatImageToQt(frame)));
+#endif
+}
+
 void camra::timerStart()
 {
+    ui->label->setScaledContents(true);
     timer->start(1000/fps);
+#ifdef OPEN_DETECTED
+    timer2->start(1000/fps);
+    MyThread1->start();
+    MyThread2->start();
+    //MyThread3->start();
+#endif
 }
+
+
 camra::~camra()
 {
     delete ui;
     cap.release();
     timer->stop();
     delete timer;
+#ifdef OPEN_DETECTED
+    timer2->stop();
+    MyThread1->stopThread();
+    MyThread2->stopThread();
+    MyThread3->stopThread();
+    MyThread1->quit();
+    MyThread2->quit();
+    MyThread3->quit();
+    delete timer2;
+    delete MyThread1;
+    delete MyThread2;
+    delete MyThread3;
+    deleteLater();
+#endif
 }
+
+void camra::on_pushButton_clicked()
+{
+    timer->stop();
+    timer2->stop();
+    MyThread1->stopThread();
+    MyThread2->stopThread();
+    MyThread3->stopThread();
+    MyThread1->quit();
+    MyThread2->quit();
+    MyThread3->quit();
+}
+

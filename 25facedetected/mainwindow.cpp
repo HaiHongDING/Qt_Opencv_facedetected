@@ -22,7 +22,7 @@ void MainWindow::on_pushButton_clicked()
 {
     camra1=new camra(CamraMap.find(ui->comboBox->currentText().toStdString())->second,this);
     camra1->show();
-    camra1->timerStart();
+    //camra1->timerStart();
 }
 
 

@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -20,15 +21,21 @@ class Ui_camra
 {
 public:
     QLabel *label;
+    QPushButton *pushButton;
 
     void setupUi(QWidget *camra)
     {
         if (camra->objectName().isEmpty())
             camra->setObjectName(QString::fromUtf8("camra"));
-        camra->resize(856, 406);
+        camra->resize(1920, 1080);
         label = new QLabel(camra);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(0, 0, 1280, 780));
+        label->setGeometry(QRect(550, 40, 841, 501));
+        pushButton = new QPushButton(camra);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        pushButton->setGeometry(QRect(1460, 80, 191, 191));
+        pushButton->setMinimumSize(QSize(191, 191));
+        pushButton->setMaximumSize(QSize(191, 191));
 
         retranslateUi(camra);
 
@@ -39,6 +46,7 @@ public:
     {
         camra->setWindowTitle(QCoreApplication::translate("camra", "Form", nullptr));
         label->setText(QCoreApplication::translate("camra", "TextLabel", nullptr));
+        pushButton->setText(QCoreApplication::translate("camra", "PUSH", nullptr));
     } // retranslateUi
 
 };
